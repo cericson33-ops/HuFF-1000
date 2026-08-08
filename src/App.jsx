@@ -183,6 +183,100 @@ const DIAGRAMS = {
       </svg>
     ),
   },
+  Reaktionskull: {
+    caption: "Alla driver egen boll fritt. På signal lämnas den egna bollen genast — närmaste spelare rusar för att erövra en grannes boll innan de hinner reagera.",
+    svg: (
+      <svg viewBox="0 0 300 190" className="w-full h-auto">
+        <rect x="10" y="10" width="280" height="170" rx="14" fill="none" stroke="#C9BFA9" strokeWidth="2" strokeDasharray="6 6" />
+
+        {/* signal/visselpipa i hörnet */}
+        <g transform="translate(255 30)">
+          <circle cx="0" cy="0" r="12" fill="none" stroke="#7A1620" strokeWidth="2" />
+          <circle cx="0" cy="0" r="3" fill="#7A1620" />
+          <path d="M10 0 L20 0" stroke="#7A1620" strokeWidth="2" />
+        </g>
+
+        {/* spelare i lugnt läge, egen boll var */}
+        <g>
+          <circle cx="60" cy="60" r="8" fill="#221A17" />
+          <circle cx="71" cy="67" r="4" fill="#7A1620" />
+        </g>
+        <g>
+          <circle cx="150" cy="45" r="8" fill="#221A17" />
+          <circle cx="161" cy="52" r="4" fill="#7A1620" />
+        </g>
+        <g>
+          <circle cx="90" cy="150" r="8" fill="#221A17" />
+          <circle cx="101" cy="157" r="4" fill="#7A1620" />
+        </g>
+
+        {/* spelaren som lämnar sin boll (övergiven boll, streckad) och rusar mot grannens */}
+        <circle cx="200" cy="140" r="4" fill="none" stroke="#8C8177" strokeWidth="1.5" strokeDasharray="2 2" />
+        <circle cx="200" cy="123" r="8" fill="#221A17" />
+        <path d="M195 130 Q170 100 155 55" fill="none" stroke="#7A1620" strokeWidth="2" strokeDasharray="4 4" markerEnd="url(#arrowReak)" />
+
+        <defs>
+          <marker id="arrowReak" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 z" fill="#7A1620" />
+          </marker>
+        </defs>
+      </svg>
+    ),
+  },
+  "Byta yta": {
+    caption: "Spelarna delas i två ytor och kör kull eller egna bollövningar. På tränarens signal byter alla yta med varandra, snabbt och samtidigt.",
+    svg: (
+      <svg viewBox="0 0 300 190" className="w-full h-auto">
+        {/* två ytor sida vid sida */}
+        <rect x="10" y="10" width="128" height="170" rx="12" fill="none" stroke="#C9BFA9" strokeWidth="2" strokeDasharray="6 6" />
+        <rect x="162" y="10" width="128" height="170" rx="12" fill="none" stroke="#C9BFA9" strokeWidth="2" strokeDasharray="6 6" />
+
+        {/* signal/visselpipa mitt emellan ytorna */}
+        <g transform="translate(150 30)">
+          <circle cx="0" cy="0" r="11" fill="none" stroke="#7A1620" strokeWidth="2" />
+          <circle cx="0" cy="0" r="3" fill="#7A1620" />
+        </g>
+
+        {/* spelare i vänster yta, egen boll var */}
+        <g>
+          <circle cx="45" cy="70" r="8" fill="#221A17" />
+          <circle cx="56" cy="77" r="4" fill="#7A1620" />
+        </g>
+        <g>
+          <circle cx="90" cy="55" r="8" fill="#221A17" />
+          <circle cx="101" cy="62" r="4" fill="#7A1620" />
+        </g>
+        <g>
+          <circle cx="60" cy="145" r="8" fill="#221A17" />
+          <circle cx="71" cy="152" r="4" fill="#7A1620" />
+        </g>
+
+        {/* spelare i höger yta, egen boll var */}
+        <g>
+          <circle cx="255" cy="65" r="8" fill="#C8102E" />
+          <circle cx="266" cy="72" r="4" fill="#221A17" />
+        </g>
+        <g>
+          <circle cx="210" cy="90" r="8" fill="#C8102E" />
+          <circle cx="221" cy="97" r="4" fill="#221A17" />
+        </g>
+        <g>
+          <circle cx="240" cy="150" r="8" fill="#C8102E" />
+          <circle cx="251" cy="157" r="4" fill="#221A17" />
+        </g>
+
+        {/* pilar som visar bytet mellan ytorna */}
+        <path d="M100 110 Q150 100 200 110" fill="none" stroke="#7A1620" strokeWidth="2" strokeDasharray="4 4" markerEnd="url(#arrowByta)" />
+        <path d="M200 130 Q150 140 100 130" fill="none" stroke="#7A1620" strokeWidth="2" strokeDasharray="4 4" markerEnd="url(#arrowByta)" />
+
+        <defs>
+          <marker id="arrowByta" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 z" fill="#7A1620" />
+          </marker>
+        </defs>
+      </svg>
+    ),
+  },
   "Fri yta": {
     caption: "Spelarna driver fritt i ytan och testar olika finter, dribblingar och vändningar.",
     svg: <DribbleAreaDiagram />,
@@ -706,6 +800,11 @@ const THEMES = [
   },
 ];
 
+// Extra övningar i block 1 som bara visas när ett visst tema är valt.
+const THEME_BLOCK1_EXTRAS = {
+  omstallning: ["Reaktionskull", "Byta yta"],
+};
+
 export default function App() {
   const [ageId, setAgeId] = useState("8-9");
   const [themeId, setThemeId] = useState("1mot1");
@@ -1154,6 +1253,81 @@ export default function App() {
                       })}
                     </div>
                     )}
+
+                    {/* Bonusövningar: visas bara i block 1 för teman som har egna kopplade övningar */}
+                    {i === 0 &&
+                      THEME_BLOCK1_EXTRAS[themeId] &&
+                      THEME_BLOCK1_EXTRAS[themeId].map((exName, exIdx) => {
+                        const bonusKey = `theme-bonus-${i}-${exIdx}`;
+                        const isBonusOpen = openExercise === bonusKey;
+                        return (
+                          <div
+                            key={bonusKey}
+                            className="rounded-xl overflow-hidden mt-2"
+                            style={{ background: "#fff", border: "1.5px solid #C8102E" }}
+                          >
+                            <button
+                              onClick={() => toggleExercise(bonusKey)}
+                              className="w-full px-3 py-2.5 flex items-center gap-3 text-left"
+                            >
+                              <div
+                                className="flex-shrink-0 flex items-center justify-center rounded-full"
+                                style={{
+                                  width: 22,
+                                  height: 22,
+                                  background: "#FBEDE9",
+                                  color: "#C8102E",
+                                  fontSize: "0.68rem",
+                                  fontFamily: "'JetBrains Mono', monospace",
+                                  fontWeight: 700,
+                                }}
+                              >
+                                +
+                              </div>
+                              <span
+                                className="flex-1"
+                                style={{ fontSize: "0.88rem", fontWeight: 500, color: "#7A1620" }}
+                              >
+                                {exName}
+                              </span>
+                              <span
+                                style={{
+                                  fontFamily: "'JetBrains Mono', monospace",
+                                  fontSize: "0.62rem",
+                                  color: "#C8102E",
+                                  marginRight: 4,
+                                }}
+                              >
+                                TEMA
+                              </span>
+                              <ChevronDown
+                                size={15}
+                                style={{
+                                  color: "#8C8177",
+                                  transition: "transform 0.2s ease",
+                                  transform: isBonusOpen ? "rotate(180deg)" : "rotate(0deg)",
+                                }}
+                              />
+                            </button>
+                            {isBonusOpen && (
+                              <div className="px-3 pb-3">
+                                <div
+                                  className="rounded-lg p-2"
+                                  style={{ background: "#FBF8F1", border: "1px solid #EFE9DA" }}
+                                >
+                                  {DIAGRAMS[exName].svg}
+                                  <p
+                                    className="mt-1 text-xs text-center"
+                                    style={{ color: "#7A1620", padding: "0 0.25rem" }}
+                                  >
+                                    {DIAGRAMS[exName].caption}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                   </div>
                 )}
               </div>
