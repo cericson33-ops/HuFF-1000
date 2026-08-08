@@ -277,6 +277,53 @@ const DIAGRAMS = {
       </svg>
     ),
   },
+  Fotbollshjärnan: {
+    caption: (
+      <>
+        Alla driver runt varsin boll i ytan. Barnen får hjälpa till att ta fram två roliga ord som ska fungera som kommando. Tex ord 1 = vända med bollen, ord 2 = stanna med sula på bollen.
+        <br />
+        <br />
+        När som helst under övningen kan en ledare ropa en färg. Då ska barnen driva bollen ut till den väst vars färg ropas ut och sen tillbaka in i ytan. Då blir det ett naturligt break där man till exempel kan göra en koordinationsövning.
+      </>
+    ),
+    svg: (
+      <svg viewBox="0 0 320 240" className="w-full h-auto">
+        {/* yta, större */}
+        <rect x="25" y="25" width="270" height="160" rx="14" fill="none" stroke="#C9BFA9" strokeWidth="2" strokeDasharray="6 6" />
+
+        {/* spelare i ytan, egen boll var (6 st) */}
+        <g><circle cx="90" cy="65" r="8" fill="#221A17" /><circle cx="101" cy="72" r="4" fill="#7A1620" /></g>
+        <g><circle cx="175" cy="55" r="8" fill="#221A17" /><circle cx="186" cy="62" r="4" fill="#7A1620" /></g>
+        <g><circle cx="250" cy="70" r="8" fill="#221A17" /><circle cx="261" cy="77" r="4" fill="#7A1620" /></g>
+        <g><circle cx="75" cy="150" r="8" fill="#221A17" /><circle cx="86" cy="157" r="4" fill="#7A1620" /></g>
+        <g><circle cx="160" cy="160" r="8" fill="#221A17" /><circle cx="171" cy="167" r="4" fill="#7A1620" /></g>
+        <g><circle cx="235" cy="145" r="8" fill="#221A17" /><circle cx="246" cy="152" r="4" fill="#7A1620" /></g>
+
+        {/* västar utanför ytan, ca 1m ut, 3 färger med dubbletter */}
+        <g transform="translate(70 10)"><rect x="-8" y="-9" width="16" height="18" rx="3" fill="#C8102E" /><path d="M-4 -9 L0 -3 L4 -9 Z" fill="#FBF8F1" /></g>
+        <g transform="translate(245 202)"><rect x="-8" y="-9" width="16" height="18" rx="3" fill="#C8102E" /><path d="M-4 -9 L0 -3 L4 -9 Z" fill="#FBF8F1" /></g>
+
+        <g transform="translate(10 95)"><rect x="-8" y="-9" width="16" height="18" rx="3" fill="#E8899E" /><path d="M-4 -9 L0 -3 L4 -9 Z" fill="#FBF8F1" /></g>
+        <g transform="translate(310 135)"><rect x="-8" y="-9" width="16" height="18" rx="3" fill="#E8899E" /><path d="M-4 -9 L0 -3 L4 -9 Z" fill="#FBF8F1" /></g>
+
+        <g transform="translate(245 10)"><rect x="-8" y="-9" width="16" height="18" rx="3" fill="#4C7EA8" /><path d="M-4 -9 L0 -3 L4 -9 Z" fill="#FBF8F1" /></g>
+        <g transform="translate(90 202)"><rect x="-8" y="-9" width="16" height="18" rx="3" fill="#4C7EA8" /><path d="M-4 -9 L0 -3 L4 -9 Z" fill="#FBF8F1" /></g>
+
+        {/* pilar: ut till röd väst och tillbaka in i ytan */}
+        <path d="M90 58 Q80 32 70 18" fill="none" stroke="#7A1620" strokeWidth="2" strokeDasharray="4 4" markerEnd="url(#arrowHjarna)" />
+        <path d="M70 18 Q60 40 78 58" fill="none" stroke="#7A1620" strokeWidth="1.5" strokeDasharray="2 3" markerEnd="url(#arrowHjarna)" />
+
+        <path d="M235 152 Q242 178 245 195" fill="none" stroke="#7A1620" strokeWidth="2" strokeDasharray="4 4" markerEnd="url(#arrowHjarna)" />
+        <path d="M245 195 Q225 175 220 155" fill="none" stroke="#7A1620" strokeWidth="1.5" strokeDasharray="2 3" markerEnd="url(#arrowHjarna)" />
+
+        <defs>
+          <marker id="arrowHjarna" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 z" fill="#7A1620" />
+          </marker>
+        </defs>
+      </svg>
+    ),
+  },
   "Fri yta": {
     caption: "Spelarna driver fritt i ytan och testar olika finter, dribblingar och vändningar.",
     svg: <DribbleAreaDiagram />,
@@ -542,6 +589,7 @@ const AGE_GROUPS = [
           "Blanda in koordination i denna del.",
         ],
         dribbleArea: true,
+        altExercises: ["Fotbollshjärnan"],
       },
       {
         title: "Fritt smålagsspel",
@@ -606,6 +654,7 @@ const AGE_GROUPS = [
           "Fortsätt att baka in kognitiva utmaningar samt koordination.",
         ],
         dribbleArea: true,
+        altExercises: ["Fotbollshjärnan"],
       },
       {
         title: "Fritt smålagsspel",
@@ -801,8 +850,10 @@ const THEMES = [
 ];
 
 // Extra övningar i block 1 som bara visas när ett visst tema är valt.
+// (gäller bara 6–7 år — 8–9 och 10 år har Fotbollshjärnan som fast övning istället, se ålderdatan ovan)
 const THEME_BLOCK1_EXTRAS = {
   omstallning: ["Reaktionskull", "Byta yta"],
+  scanning: ["Fotbollshjärnan"],
 };
 
 export default function App() {
@@ -1167,11 +1218,73 @@ export default function App() {
                         )}
                       </div>
                     ) : b.dribbleArea ? (
-                      <div
-                        className="rounded-lg p-3"
-                        style={{ background: "#fff", border: "1px solid #E4DCC9" }}
-                      >
-                        <DribbleAreaDiagram />
+                      <div className="space-y-2">
+                        <div
+                          className="rounded-lg p-3"
+                          style={{ background: "#fff", border: "1px solid #E4DCC9" }}
+                        >
+                          <DribbleAreaDiagram />
+                        </div>
+
+                        {b.altExercises &&
+                          b.altExercises.map((ov, k) => {
+                            const exKey = `alt-${i}-${k}`;
+                            const isExOpen = openExercise === exKey;
+                            const diagram = DIAGRAMS[ov];
+                            return (
+                              <div
+                                key={exKey}
+                                className="rounded-xl overflow-hidden"
+                                style={{ background: "#fff", border: "1px solid #E4DCC9" }}
+                              >
+                                <button
+                                  onClick={() => toggleExercise(exKey)}
+                                  className="w-full px-3 py-2.5 flex items-center gap-3 text-left"
+                                >
+                                  <span
+                                    className="flex-1"
+                                    style={{ fontSize: "0.88rem", fontWeight: 500, color: "#3A322D" }}
+                                  >
+                                    {ov}
+                                  </span>
+                                  <span
+                                    style={{
+                                      fontFamily: "'JetBrains Mono', monospace",
+                                      fontSize: "0.62rem",
+                                      color: "#8C8177",
+                                      marginRight: 4,
+                                    }}
+                                  >
+                                    ALTERNATIV
+                                  </span>
+                                  <ChevronDown
+                                    size={15}
+                                    style={{
+                                      color: "#8C8177",
+                                      transition: "transform 0.2s ease",
+                                      transform: isExOpen ? "rotate(180deg)" : "rotate(0deg)",
+                                    }}
+                                  />
+                                </button>
+                                {isExOpen && diagram && (
+                                  <div className="px-3 pb-3">
+                                    <div
+                                      className="rounded-lg p-2"
+                                      style={{ background: "#FBF8F1", border: "1px solid #EFE9DA" }}
+                                    >
+                                      {diagram.svg}
+                                      <p
+                                        className="mt-1 text-xs text-center"
+                                        style={{ color: "#7A1620", padding: "0 0.25rem" }}
+                                      >
+                                        {diagram.caption}
+                                      </p>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
                       </div>
                     ) : (
                     <div className="space-y-2">
@@ -1254,9 +1367,12 @@ export default function App() {
                     </div>
                     )}
 
-                    {/* Bonusövningar: visas bara i block 1 för teman som har egna kopplade övningar */}
+                    {/* Bonusövningar: visas i block 1 för teman som har egna kopplade övningar.
+                        Undantag: Fotbollshjärnan (scanning) visas bara som temaövning för 6–7 år —
+                        i 8–9/10 år ligger den istället som fast övning i exercises-listan ovan. */}
                     {i === 0 &&
                       THEME_BLOCK1_EXTRAS[themeId] &&
+                      !(themeId === "scanning" && ageId !== "6-7") &&
                       THEME_BLOCK1_EXTRAS[themeId].map((exName, exIdx) => {
                         const bonusKey = `theme-bonus-${i}-${exIdx}`;
                         const isBonusOpen = openExercise === bonusKey;
