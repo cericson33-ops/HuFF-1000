@@ -736,7 +736,13 @@ export default function App() {
         style={{ fontFamily: "'Inter', sans-serif", color: "#221A17" }}
       >
         {/* Header */}
-        <header className="px-5 pt-8 pb-6" style={{ background: "#7A1620" }}>
+        <header
+          className="px-5 pb-6"
+          style={{
+            background: "#7A1620",
+            paddingTop: "max(2rem, calc(env(safe-area-inset-top) + 0.75rem))",
+          }}
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img
