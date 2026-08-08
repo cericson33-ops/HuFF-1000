@@ -681,6 +681,29 @@ const THEMES = [
       },
     ],
   },
+  {
+    id: "omstallning",
+    name: "Omställning",
+    purpose: "Utnyttja ögonblicket direkt efter bollvinst eller bollförlust",
+    constraints: [
+      {
+        text: "5-sekundersregeln.",
+        explanation: "Efter bollvinst har laget 5 sekunder på sig att avsluta.",
+      },
+      {
+        text: "Vinn tillbaka inom 5 sekunder.",
+        explanation: "Efter bolltapp får laget bonuspoäng om de återerövrar bollen inom 5 sekunder.",
+      },
+      {
+        text: "Närmaste spelare pressar direkt.",
+        explanation: "Vid bollförlust ska närmaste spelare pressa direkt istället för att organisera om — tvingar fram en omedelbar återerövringsreaktion.",
+      },
+      {
+        text: "Riktning byts direkt.",
+        explanation: "När ett lag vinner bollen måste de direkt attackera motsatt riktning/mål.",
+      },
+    ],
+  },
 ];
 
 export default function App() {
