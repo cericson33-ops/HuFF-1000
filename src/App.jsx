@@ -7,6 +7,9 @@ const FONTS = `
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
 `;
 
+// Giltiga aktiveringskoder. Lägg till/ta bort koder här vid behov.
+const VALID_CODES = ["HUFF-ADMIN-9K2X", "HUFF-TRANARE-BPXE"];
+
 // Enkla grafiska diagram som illustrerar övningens uppställning.
 // Nyckeln måste matcha övningens namn exakt.
 const DIAGRAMS = {
@@ -864,6 +867,41 @@ export default function App() {
   const [openExercise, setOpenExercise] = useState(null);
   const [constraintsOpen, setConstraintsOpen] = useState(false);
 
+  const [accessGranted, setAccessGranted] = useState(false);
+  const [accessChecked, setAccessChecked] = useState(false);
+  const [codeInput, setCodeInput] = useState("");
+  const [codeError, setCodeError] = useState(false);
+
+  const normalizeCode = (c) => c.trim().toUpperCase();
+
+  const handleCodeSubmit = () => {
+    const cleaned = normalizeCode(codeInput);
+    if (VALID_CODES.includes(cleaned)) {
+      setAccessGranted(true);
+      setCodeError(false);
+      try {
+        localStorage.setItem("huff1000:access-code", cleaned);
+      } catch (e) {
+        // ignorera lagringsfel
+      }
+    } else {
+      setCodeError(true);
+    }
+  };
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("huff1000:access-code");
+      if (saved && VALID_CODES.includes(normalizeCode(saved))) {
+        setAccessGranted(true);
+      }
+    } catch (e) {
+      // ingen sparad kod ännu
+    } finally {
+      setAccessChecked(true);
+    }
+  }, []);
+
   const toggleBlock = (i) => {
     setOpenBlocks((prev) => ({ ...prev, [i]: !prev[i] }));
     setOpenExercise(null);
@@ -900,6 +938,123 @@ export default function App() {
 
   const age = useMemo(() => AGE_GROUPS.find((a) => a.id === ageId), [ageId]);
   const theme = useMemo(() => THEMES.find((t) => t.id === themeId), [themeId]);
+
+  // Väntar på att vi kollat om en giltig kod redan finns sparad, för att undvika en flimrande låsskärm.
+  if (!accessChecked) {
+    return <div className="min-h-screen w-full" style={{ background: "#F5F1E8" }} />;
+  }
+
+  if (!accessGranted) {
+    return (
+      <div className="min-h-screen w-full flex flex-col" style={{ background: "#F5F1E8" }}>
+        <style>{FONTS}</style>
+        <div
+          className="px-6 text-center"
+          style={{
+            background: "#7A1620",
+            paddingTop: "max(3.5rem, calc(env(safe-area-inset-top) + 2.5rem))",
+            paddingBottom: "2.5rem",
+          }}
+        >
+          <div
+            className="mx-auto rounded-full flex items-center justify-center"
+            style={{
+              width: 86,
+              height: 86,
+              background: "#F5F1E8",
+              padding: 7,
+              boxShadow: "0 8px 22px rgba(0,0,0,0.32)",
+            }}
+          >
+            <img src={LOGO} alt="Hudiksvalls FF" style={{ width: 72, height: 72, display: "block" }} />
+          </div>
+          <h1
+            className="mt-4"
+            style={{ fontFamily: "'Fraunces', serif", fontWeight: 900, fontSize: "1.8rem", color: "#F5F1E8" }}
+          >
+            HuFF-1000
+          </h1>
+          <p className="mt-2 text-sm" style={{ color: "#E8B4A8", lineHeight: 1.5 }}>
+            Träningskonceptet för Hudiksvalls FF:s ungdomslag i åldrarna 6–10 år — ange din
+            aktiveringskod för att fortsätta
+          </p>
+        </div>
+
+        <div className="flex-1 flex flex-col px-6 pt-8 pb-8 max-w-md mx-auto w-full">
+          <label
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: "0.66rem",
+              letterSpacing: "0.07em",
+              color: "#8A8272",
+              marginBottom: "0.5rem",
+              display: "block",
+            }}
+          >
+            AKTIVERINGSKOD
+          </label>
+          <input
+            value={codeInput}
+            onChange={(e) => {
+              setCodeInput(e.target.value);
+              if (codeError) setCodeError(false);
+            }}
+            onKeyDown={(e) => e.key === "Enter" && handleCodeSubmit()}
+            placeholder="HUFF-XXXXXX"
+            className="w-full text-center"
+            style={{
+              padding: "17px 14px",
+              borderRadius: 12,
+              border: `2px solid ${codeError ? "#C8102E" : "#E4DCC9"}`,
+              background: "#fff",
+              fontSize: "1.2rem",
+              color: "#221A17",
+              marginBottom: codeError ? "0.75rem" : "1.1rem",
+              fontFamily: "'JetBrains Mono', monospace",
+              letterSpacing: "0.12em",
+              fontWeight: 700,
+            }}
+          />
+          {codeError && (
+            <div
+              className="flex items-center gap-2 text-sm"
+              style={{
+                background: "#FBEDE9",
+                border: "1px solid #E8B4A8",
+                borderRadius: 10,
+                padding: "10px 12px",
+                color: "#7A1620",
+                marginBottom: "1.1rem",
+              }}
+            >
+              ⚠ Koden stämmer inte. Kontrollera att du skrivit rätt.
+            </div>
+          )}
+          <button
+            onClick={handleCodeSubmit}
+            className="w-full"
+            style={{
+              padding: "16px 0",
+              borderRadius: 12,
+              background: "#7A1620",
+              color: "#F5F1E8",
+              fontWeight: 700,
+              fontSize: "0.96rem",
+            }}
+          >
+            Lås upp
+          </button>
+
+          <p
+            className="text-center mt-auto pt-8 text-sm"
+            style={{ color: "#8A8272", lineHeight: 1.6 }}
+          >
+            Ingen kod? Fråga din ungdomsansvarige inom HuFF.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full" style={{ background: "#F5F1E8" }}>
