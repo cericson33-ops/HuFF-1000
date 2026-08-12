@@ -859,6 +859,25 @@ const THEME_BLOCK1_EXTRAS = {
   scanning: ["Fotbollshjärnan"],
 };
 
+// Coachningspunkter per övning i block 3 (8–9 och 10 år bara — inte 6–7 år).
+const COACHING_POINTS = {
+  "Fri yta": [
+    "Beror på vilken typ av fint eller vändning spelaren gör — anpassa coachningen efter momentet.",
+  ],
+  Djurgården: ["Överdriv rörelsen", "Tempoväxla", "Höj blicken"],
+  "1v1": ["Överdriv rörelsen", "Tempoväxla", "Defensivt: ta spelaren först, sedan bollen"],
+  Kvadraten: [
+    "Bli spelbar för kompisen",
+    "Ha nästa passning redo innan du får bollen",
+    "Ropa till dig bollen",
+  ],
+  "Kvadraten (4v1 & 3v1)": [
+    "Bli spelbar för kompisen",
+    "Ha nästa passning redo innan du får bollen",
+    "Ropa till dig bollen",
+  ],
+};
+
 export default function App() {
   const [ageId, setAgeId] = useState("8-9");
   const [themeId, setThemeId] = useState("1mot1");
@@ -1512,6 +1531,42 @@ export default function App() {
                                     }}
                                   >
                                     Ingen bild tillagd ännu för den här övningen
+                                  </div>
+                                )}
+
+                                {ageId !== "6-7" && COACHING_POINTS[ov] && (
+                                  <div
+                                    className="rounded-lg mt-2 p-2.5"
+                                    style={{ background: "#fff", border: "1px solid #EFE9DA" }}
+                                  >
+                                    <div
+                                      style={{
+                                        fontFamily: "'JetBrains Mono', monospace",
+                                        fontSize: "0.62rem",
+                                        letterSpacing: "0.05em",
+                                        color: "#7A1620",
+                                        fontWeight: 700,
+                                        marginBottom: "0.4rem",
+                                      }}
+                                    >
+                                      COACHNINGSPUNKTER
+                                    </div>
+                                    <ul className="space-y-1">
+                                      {COACHING_POINTS[ov].map((pt, pi) => (
+                                        <li
+                                          key={pi}
+                                          className="flex gap-2 text-sm"
+                                          style={{ color: "#3A322D" }}
+                                        >
+                                          <ChevronRight
+                                            size={14}
+                                            className="flex-shrink-0 mt-0.5"
+                                            style={{ color: "#C8102E" }}
+                                          />
+                                          <span>{pt}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
                                   </div>
                                 )}
                               </div>
