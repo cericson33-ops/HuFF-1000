@@ -810,29 +810,6 @@ const THEMES = [
     ],
   },
   {
-    id: "avslut",
-    name: "Avslut & göra mål",
-    purpose: "Skapa målchanser och avsluta",
-    constraints: [
-      {
-        text: "Dubbel poäng efter snabbt avslut.",
-        explanation: "Ett mål räknas dubbelt om det görs snabbt, inom en viss tidsgräns.",
-      },
-      {
-        text: "Mål från offensiv planhalva.",
-        explanation: "Målet måste påbörjas eller avslutas medan laget befinner sig på planens offensiva halva.",
-      },
-      {
-        text: "Flera småmål.",
-        explanation: "Flera mindre mål ställs upp samtidigt för att ge fler avslutsmöjligheter.",
-      },
-      {
-        text: "Avslut på ett tillslag.",
-        explanation: "Spelaren måste avsluta direkt på en bollberöring, utan att först ta ner eller kontrollera bollen.",
-      },
-    ],
-  },
-  {
     id: "omstallning",
     name: "Omställning",
     purpose: "Utnyttja ögonblicket direkt efter bollvinst eller bollförlust",
