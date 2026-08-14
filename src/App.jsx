@@ -532,7 +532,15 @@ const AGE_GROUPS = [
           "Lekar med boll. Kull, Svansleken, Stoppljus etc.",
           "Blanda in enklare koordination i denna del.",
         ],
-        exercises: ["Tunnelkull", "Stoppljus", "Svansleken", "Poängjakten"],
+        exercises: [
+          "Tunnelkull",
+          "Stoppljus",
+          "Svansleken",
+          "Poängjakten",
+          "Reaktionskull",
+          "Byta yta",
+          "Fotbollshjärnan",
+        ],
       },
       {
         title: "Fritt smålagsspel",
@@ -561,10 +569,7 @@ const AGE_GROUPS = [
       {
         title: "Fritt eller tematiskt smålagsspel",
         time: "15 min",
-        points: [
-          "2v2 eller 3v3 med en enkel lekregel.",
-          "Håll reglerna till max en åt gången.",
-        ],
+        points: ["Spela 2v2 eller 3v3."],
         themed: true,
         pitchLayout: { count: 2, format: "3v3" },
       },
@@ -852,11 +857,29 @@ const THEMES = [
   },
 ];
 
-// Extra övningar i block 1 som bara visas när ett visst tema är valt.
-// (gäller bara 6–7 år — 8–9 och 10 år har Fotbollshjärnan som fast övning istället, se ålderdatan ovan)
+// Förenklade teman för 6–7 år: bara begreppsintroduktion i block 4, inga constraints.
+const YOUNG_THEMES = [
+  {
+    id: "anfallsspel",
+    name: "Anfallsspel",
+    points: ["Försök spela bollen framåt", "Vem i laget är fri?"],
+  },
+  {
+    id: "forsvarsspel",
+    name: "Försvarsspel",
+    points: ["Stå mellan bollen och målet", "Var snabb tillbaka om vi tappar bollen"],
+  },
+  {
+    id: "omstallning",
+    name: "Omställning",
+    points: ["Reagera snabbt när bollen byter ägare"],
+  },
+];
+
+// Extra övningar i block 1 som bara visas när ett visst tema är valt (gäller inte 6–7 år —
+// där ligger alla övningar, inklusive Reaktionskull/Byta yta/Fotbollshjärnan, fast utan temakoppling).
 const THEME_BLOCK1_EXTRAS = {
   omstallning: ["Reaktionskull", "Byta yta"],
-  scanning: ["Fotbollshjärnan"],
 };
 
 // Coachningspunkter per övning i block 3 (8–9 och 10 år bara — inte 6–7 år).
@@ -879,8 +902,8 @@ const COACHING_POINTS = {
 };
 
 export default function App() {
-  const [ageId, setAgeId] = useState("8-9");
-  const [themeId, setThemeId] = useState("1mot1");
+  const [ageId, setAgeId] = useState("6-7");
+  const [themeId, setThemeId] = useState("anfallsspel");
   const [loaded, setLoaded] = useState(false);
   const [openBlocks, setOpenBlocks] = useState({});
   const [openExercise, setOpenExercise] = useState(null);
@@ -956,7 +979,17 @@ export default function App() {
   }, [ageId, themeId, loaded]);
 
   const age = useMemo(() => AGE_GROUPS.find((a) => a.id === ageId), [ageId]);
-  const theme = useMemo(() => THEMES.find((t) => t.id === themeId), [themeId]);
+  const activeThemes = ageId === "6-7" ? YOUNG_THEMES : THEMES;
+  const theme = useMemo(() => activeThemes.find((t) => t.id === themeId), [themeId, ageId]);
+
+  // Om åldern byts till en grupp vars temalista inte innehåller det just nu valda temat,
+  // väljs första temat i den nya listan automatiskt.
+  useEffect(() => {
+    const list = ageId === "6-7" ? YOUNG_THEMES : THEMES;
+    if (!list.find((t) => t.id === themeId)) {
+      setThemeId(list[0].id);
+    }
+  }, [ageId]);
 
   // Väntar på att vi kollat om en giltig kod redan finns sparad, för att undvika en flimrande låsskärm.
   if (!accessChecked) {
@@ -1133,7 +1166,13 @@ export default function App() {
             {AGE_GROUPS.map((a) => (
               <button
                 key={a.id}
-                onClick={() => setAgeId(a.id)}
+                onClick={() => {
+                  const list = a.id === "6-7" ? YOUNG_THEMES : THEMES;
+                  setAgeId(a.id);
+                  if (!list.find((t) => t.id === themeId)) {
+                    setThemeId(list[0].id);
+                  }
+                }}
                 className="flex-1 py-3 text-sm font-semibold transition-colors"
                 style={{
                   background: a.id === ageId ? "#7A1620" : "transparent",
@@ -1159,7 +1198,7 @@ export default function App() {
             VECKANS TEMA
           </label>
           <div className="mt-2 flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
-            {THEMES.map((t) => (
+            {activeThemes.map((t) => (
               <button
                 key={t.id}
                 onClick={() => setThemeId(t.id)}
@@ -1234,7 +1273,7 @@ export default function App() {
                               letterSpacing: "0.05em",
                             }}
                           >
-                            TEMA: {theme.name.toUpperCase()}
+                            TEMA: {theme?.name?.toUpperCase() || ""}
                           </span>
                         )}
                       </div>
@@ -1251,13 +1290,27 @@ export default function App() {
                         <span>{p}</span>
                       </li>
                     ))}
-                    {isThemed && (
+                    {isThemed && ageId === "6-7" && (
+                      <>
+                        {(theme?.points || []).map((pt, pj) => (
+                          <li
+                            key={pj}
+                            className="flex gap-2 text-sm mt-2 rounded-lg p-2.5"
+                            style={{ background: "#FBEDE9", color: "#7A1620" }}
+                          >
+                            <ChevronRight size={14} className="flex-shrink-0 mt-0.5" style={{ color: "#C8102E" }} />
+                            <span style={{ fontWeight: 500 }}>{pt}</span>
+                          </li>
+                        ))}
+                      </>
+                    )}
+                    {isThemed && ageId !== "6-7" && (
                       <li
                         className="flex gap-2 text-sm mt-2 rounded-lg p-2.5"
                         style={{ background: "#FBEDE9", color: "#7A1620" }}
                       >
                         <ChevronRight size={14} className="flex-shrink-0 mt-0.5" style={{ color: "#C8102E" }} />
-                        <span style={{ fontWeight: 500 }}>{theme.purpose}</span>
+                        <span style={{ fontWeight: 500 }}>{theme?.purpose}</span>
                       </li>
                     )}
                   </ul>
@@ -1309,7 +1362,7 @@ export default function App() {
                           />
                         </div>
 
-                        {isThemed && (
+                        {isThemed && ageId !== "6-7" && (
                           <div
                             className="rounded-xl overflow-hidden"
                             style={{ background: "#fff", border: "1px solid #E4DCC9" }}
@@ -1340,7 +1393,7 @@ export default function App() {
                             </button>
                             {constraintsOpen && (
                               <div className="px-3 pb-3 space-y-1.5">
-                                {theme.constraints.map((c, ci) => {
+                                {(theme?.constraints || []).map((c, ci) => {
                                   const cKey = `${themeId}-${ci}`;
                                   const isCOpen = openExercise === `constraint-${cKey}`;
                                   return (
@@ -1578,11 +1631,10 @@ export default function App() {
                     )}
 
                     {/* Bonusövningar: visas i block 1 för teman som har egna kopplade övningar.
-                        Undantag: Fotbollshjärnan (scanning) visas bara som temaövning för 6–7 år —
-                        i 8–9/10 år ligger den istället som fast övning i exercises-listan ovan. */}
+                        Gäller inte 6–7 år — där ligger samma övningar fast, utan temakoppling. */}
                     {i === 0 &&
+                      ageId !== "6-7" &&
                       THEME_BLOCK1_EXTRAS[themeId] &&
-                      !(themeId === "scanning" && ageId !== "6-7") &&
                       THEME_BLOCK1_EXTRAS[themeId].map((exName, exIdx) => {
                         const bonusKey = `theme-bonus-${i}-${exIdx}`;
                         const isBonusOpen = openExercise === bonusKey;
