@@ -622,7 +622,7 @@ const AGE_GROUPS = [
           "Max 3–4 spelare per boll, ingen kö längre än 2–3.",
           "Börja introducera 1v1, först utan boll sedan bygga vidare med boll.",
         ],
-        exercises: ["Fri yta", "Djurgården", "1v1", "Kvadraten"],
+        exercises: ["Fri yta", "Djurgården", "1v1", "Kvadraten", "Byta yta"],
       },
       {
         title: "Tematiskt smålagsspel",
@@ -686,7 +686,7 @@ const AGE_GROUPS = [
           "Teknisk övning som gärna är kopplad till träningens tema.",
           "Max 3–4 spelare per boll/station, ingen kö längre än 2–3.",
         ],
-        exercises: ["Fri yta", "Djurgården", "1v1", "Kvadraten (4v1 & 3v1)"],
+        exercises: ["Fri yta", "Djurgården", "1v1", "Kvadraten (4v1 & 3v1)", "Byta yta"],
       },
       {
         title: "Tematiskt smålagsspel",
@@ -876,6 +876,16 @@ const COACHING_POINTS = {
     "Ha nästa passning redo innan du får bollen",
     "Ropa till dig bollen",
   ],
+};
+
+// Vilka block 3-övningar (8–9/10 år) som highlightas som relevanta för respektive tema.
+// Fri yta är alltid neutral — kopplas inte till något tema.
+const THEME_EXERCISE_HIGHLIGHT = {
+  "1mot1": ["Djurgården", "1v1"],
+  passning: ["Kvadraten", "Kvadraten (4v1 & 3v1)"],
+  scanning: ["Djurgården", "Kvadraten", "Kvadraten (4v1 & 3v1)"],
+  forsvarsspel: ["1v1"],
+  omstallning: ["Byta yta"],
 };
 
 export default function App() {
@@ -1496,11 +1506,24 @@ export default function App() {
                         const exKey = `${i}-${k}`;
                         const isExOpen = openExercise === exKey;
                         const diagram = DIAGRAMS[ov];
+                        const isThemeRelevant =
+                          i === 2 &&
+                          ageId !== "6-7" &&
+                          THEME_EXERCISE_HIGHLIGHT[themeId] &&
+                          THEME_EXERCISE_HIGHLIGHT[themeId].includes(ov);
                         return (
                           <div
                             key={k}
                             className="rounded-xl overflow-hidden"
-                            style={{ background: "#fff", border: "1px solid #E4DCC9" }}
+                            style={
+                              isThemeRelevant
+                                ? {
+                                    background: "#FBEDE9",
+                                    border: "1.5px solid #C8102E",
+                                    boxShadow: "0 0 0 3px rgba(200,16,46,0.08)",
+                                  }
+                                : { background: "#fff", border: "1px solid #E4DCC9" }
+                            }
                           >
                             <button
                               onClick={() => toggleExercise(exKey)}
@@ -1511,8 +1534,8 @@ export default function App() {
                                 style={{
                                   width: 22,
                                   height: 22,
-                                  background: "#EFE9DA",
-                                  color: "#7A1620",
+                                  background: isThemeRelevant ? "#C8102E" : "#EFE9DA",
+                                  color: isThemeRelevant ? "#fff" : "#7A1620",
                                   fontSize: "0.68rem",
                                   fontFamily: "'JetBrains Mono', monospace",
                                   fontWeight: 700,
@@ -1522,10 +1545,31 @@ export default function App() {
                               </div>
                               <span
                                 className="flex-1"
-                                style={{ fontSize: "0.88rem", fontWeight: 500, color: "#3A322D" }}
+                                style={{
+                                  fontSize: "0.88rem",
+                                  fontWeight: isThemeRelevant ? 600 : 500,
+                                  color: isThemeRelevant ? "#221A17" : "#3A322D",
+                                }}
                               >
                                 {ov}
                               </span>
+                              {isThemeRelevant && (
+                                <span
+                                  style={{
+                                    fontFamily: "'JetBrains Mono', monospace",
+                                    fontSize: "0.6rem",
+                                    color: "#C8102E",
+                                    letterSpacing: "0.04em",
+                                    background: "#fff",
+                                    padding: "2px 7px",
+                                    borderRadius: 999,
+                                    border: "1px solid #E8B4A8",
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  TEMA
+                                </span>
+                              )}
                               <ChevronDown
                                 size={15}
                                 style={{
