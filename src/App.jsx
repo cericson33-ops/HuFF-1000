@@ -723,8 +723,8 @@ const THEMES = [
     purpose: "Utmana, dribbla och skydda bollen",
     constraints: [
       {
-        text: "Mål efter lyckad dribbling.",
-        explanation: "Mål räknas bara om spelaren först dribblat förbi en försvarare.",
+        text: "Mål efter lyckad dribbling ger dubbelt mål.",
+        explanation: "Dribblar spelaren förbi en försvarare innan avslut räknas målet dubbelt. Ett vanligt mål gäller som vanligt.",
       },
       {
         text: "Bonus för lyckad 1 mot 1.",
