@@ -844,7 +844,7 @@ const YOUNG_THEMES = [
   {
     id: "forsvarsspel",
     name: "Försvarsspel",
-    points: ["Stå mellan bollen och målet", "Var snabb tillbaka om vi tappar bollen"],
+    points: ["Stå mellan bollen och eget mål", "Var snabb tillbaka om vi tappar bollen"],
   },
   {
     id: "omstallning",
