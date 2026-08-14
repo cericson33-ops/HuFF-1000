@@ -1773,6 +1773,25 @@ export default function App() {
         <p className="px-5 mt-6 text-xs text-center" style={{ color: "#B0A79B" }}>
           1000 relevanta touch per spelare — en princip, inte en regel.
         </p>
+
+        <div
+          className="mx-auto mt-4"
+          style={{ width: 40, height: 1, background: "#D8CFBB" }}
+        />
+
+        <p
+          className="px-5 pt-3 pb-2 text-center"
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: "0.7rem",
+            letterSpacing: "0.08em",
+            color: "#7A1620",
+            fontWeight: 600,
+          }}
+        >
+          AMBITION <span style={{ color: "#C8102E", margin: "0 6px" }}>·</span> NOGGRANNHET{" "}
+          <span style={{ color: "#C8102E", margin: "0 6px" }}>·</span> GLÄDJE
+        </p>
       </div>
     </div>
   );
