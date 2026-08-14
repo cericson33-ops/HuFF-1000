@@ -618,7 +618,7 @@ const AGE_GROUPS = [
         title: "Tekniskt block",
         time: "15 min",
         points: [
-          "Par- eller triovis teknikövning: mottagning → vändning → pass, eller 1v1-finter.",
+          "Teknisk övning som gärna är kopplad till träningens tema.",
           "Max 3–4 spelare per boll, ingen kö längre än 2–3.",
           "Börja introducera 1v1, först utan boll sedan bygga vidare med boll.",
         ],
@@ -683,7 +683,7 @@ const AGE_GROUPS = [
         title: "Tekniskt block",
         time: "15 min",
         points: [
-          "Dynamisk passningsövning i mindre grupper, eller 1v1/2v2 med motstånd.",
+          "Teknisk övning som gärna är kopplad till träningens tema.",
           "Max 3–4 spelare per boll/station, ingen kö längre än 2–3.",
         ],
         exercises: ["Fri yta", "Djurgården", "1v1", "Kvadraten (4v1 & 3v1)"],
