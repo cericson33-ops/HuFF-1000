@@ -746,8 +746,8 @@ const THEMES = [
     purpose: "Passa, ta emot och skapa spelbarhet",
     constraints: [
       {
-        text: "Minst tre passningar före mål.",
-        explanation: "Laget måste göra minst tre passningar innan ett mål får räknas.",
+        text: "3 passningar ger dubbelt mål.",
+        explanation: "Görs minst tre passningar innan avslut räknas målet dubbelt. Ett vanligt mål gäller som vanligt.",
       },
       {
         text: "Bonus för väggspel.",
