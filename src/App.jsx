@@ -403,6 +403,55 @@ const DIAGRAMS = {
       </svg>
     ),
   },
+  Passningsportar: {
+    caption: "Två spelare per boll. Passa genom en port till din kompis som sprungit till andra sidan. Flytta dig alltid till en ny, ledig port efter passet — det kräver att du scannar av ytan.",
+    svg: (
+      <svg viewBox="0 0 300 210" className="w-full h-auto">
+        <rect x="10" y="10" width="280" height="190" rx="14" fill="none" stroke="#C9BFA9" strokeWidth="2" strokeDasharray="6 6" />
+
+        {/* portar utspridda i ytan (koner i par) */}
+        <g transform="translate(90 64)">
+          <path d="M-14 -10 l5 -9 l5 9 z" fill="#F5A05A" />
+          <path d="M14 -10 l-5 -9 l-5 9 z" fill="#F5A05A" />
+        </g>
+        <g transform="translate(210 70) rotate(20)">
+          <path d="M-14 -10 l5 -9 l5 9 z" fill="#F5A05A" />
+          <path d="M14 -10 l-5 -9 l-5 9 z" fill="#F5A05A" />
+        </g>
+        <g transform="translate(70 150) rotate(-15)">
+          <path d="M-14 -10 l5 -9 l5 9 z" fill="#F5A05A" />
+          <path d="M14 -10 l-5 -9 l-5 9 z" fill="#F5A05A" />
+        </g>
+        <g transform="translate(200 160) rotate(10)">
+          <path d="M-14 -10 l5 -9 l5 9 z" fill="#F5A05A" />
+          <path d="M14 -10 l-5 -9 l-5 9 z" fill="#F5A05A" />
+        </g>
+
+        {/* par 1: en spelare ovanför porten, en under — passningen går rakt mellan konerna */}
+        <circle cx="90" cy="22" r="8" fill="#221A17" />
+        <circle cx="101" cy="29" r="4" fill="#7A1620" />
+        <circle cx="90" cy="106" r="8" fill="#221A17" />
+        <path d="M90 31 L90 97" fill="none" stroke="#7A1620" strokeWidth="2" strokeDasharray="4 4" markerEnd="url(#arrowPort)" />
+
+        {/* par 2: precis passerat en annan port, spelare på väg mot ny ledig port */}
+        <circle cx="240" cy="95" r="8" fill="#221A17" />
+        <circle cx="251" cy="102" r="4" fill="#7A1620" />
+        <circle cx="180" cy="120" r="8" fill="#221A17" />
+        <path d="M225 100 Q205 130 205 150" fill="none" stroke="#7A1620" strokeWidth="2" strokeDasharray="2 3" markerEnd="url(#arrowPort)" />
+
+        {/* par 3: väntar/scannar vid en ledig port */}
+        <circle cx="45" cy="150" r="8" fill="#221A17" />
+        <circle cx="56" cy="157" r="4" fill="#7A1620" />
+        <circle cx="95" cy="150" r="8" fill="#221A17" />
+
+        <defs>
+          <marker id="arrowPort" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 z" fill="#7A1620" />
+          </marker>
+        </defs>
+      </svg>
+    ),
+  },
 };
 
 // Ritar N mini-spelplaner sida vid sida med angivet format (t.ex. "3v3").
@@ -597,7 +646,7 @@ const AGE_GROUPS = [
           "Blanda in koordination i denna del.",
         ],
         dribbleArea: true,
-        altExercises: ["Fotbollshjärnan"],
+        altExercises: ["Fotbollshjärnan", "Tunnelkull", "Stoppljus", "Svansleken", "Poängjakten"],
       },
       {
         title: "Fritt smålagsspel",
@@ -622,7 +671,7 @@ const AGE_GROUPS = [
           "Max 3–4 spelare per boll, ingen kö längre än 2–3.",
           "Börja introducera 1v1, först utan boll sedan bygga vidare med boll.",
         ],
-        exercises: ["Fri yta", "Djurgården", "1v1", "Kvadraten", "Byta yta"],
+        exercises: ["Fri yta", "Djurgården", "1v1", "Kvadraten", "Byta yta", "Passningsportar"],
       },
       {
         title: "Tematiskt smålagsspel",
@@ -686,7 +735,14 @@ const AGE_GROUPS = [
           "Teknisk övning som gärna är kopplad till träningens tema.",
           "Max 3–4 spelare per boll/station, ingen kö längre än 2–3.",
         ],
-        exercises: ["Fri yta", "Djurgården", "1v1", "Kvadraten (4v1 & 3v1)", "Byta yta"],
+        exercises: [
+          "Fri yta",
+          "Djurgården",
+          "1v1",
+          "Kvadraten (4v1 & 3v1)",
+          "Byta yta",
+          "Passningsportar",
+        ],
       },
       {
         title: "Tematiskt smålagsspel",
@@ -876,14 +932,19 @@ const COACHING_POINTS = {
     "Ha nästa passning redo innan du får bollen",
     "Ropa till dig bollen",
   ],
+  Passningsportar: [
+    "Scanna av var nästa lediga port är",
+    "Passa med bestämdhet genom porten",
+    "Spring direkt till en ny port efter passet",
+  ],
 };
 
 // Vilka block 3-övningar (8–9/10 år) som highlightas som relevanta för respektive tema.
 // Fri yta är alltid neutral — kopplas inte till något tema.
 const THEME_EXERCISE_HIGHLIGHT = {
   "1mot1": ["Djurgården", "1v1"],
-  passning: ["Kvadraten", "Kvadraten (4v1 & 3v1)"],
-  scanning: ["Djurgården", "Kvadraten", "Kvadraten (4v1 & 3v1)"],
+  passning: ["Kvadraten", "Kvadraten (4v1 & 3v1)", "Passningsportar"],
+  scanning: ["Djurgården", "Kvadraten", "Kvadraten (4v1 & 3v1)", "Passningsportar"],
   forsvarsspel: ["1v1"],
   omstallning: ["Byta yta"],
 };
