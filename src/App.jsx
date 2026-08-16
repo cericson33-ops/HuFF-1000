@@ -332,9 +332,9 @@ const DIAGRAMS = {
     svg: <DribbleAreaDiagram />,
   },
   Kvadraten: {
-    caption: "Fyra spelare i en kvadrat passar bollen mellan sig, en spelare jagar i mitten. Ledaren kan stå i mitten och agera passivt för att göra det enklare.",
+    caption: "Fyra spelare i en kvadrat (ca 3–4 m per sida) passar bollen mellan sig, en spelare jagar i mitten. Ledaren kan stå i mitten och agera passivt för att göra det enklare.",
     svg: (
-      <svg viewBox="0 0 260 260" className="w-full h-auto">
+      <svg viewBox="0 0 260 280" className="w-full h-auto">
         <rect x="15" y="15" width="230" height="230" rx="14" fill="none" stroke="#C9BFA9" strokeWidth="2" strokeDasharray="6 6" />
 
         {/* kvadraten koner + spelare står på */}
@@ -357,11 +357,36 @@ const DIAGRAMS = {
 
         {/* jagare/ledare i mitten */}
         <circle cx="130" cy="130" r="9" fill="#C8102E" />
+
+        {/* måttlinje överkant */}
+        <line x1="55" y1="30" x2="205" y2="30" stroke="#8C8177" strokeWidth="1" />
+        <line x1="55" y1="26" x2="55" y2="34" stroke="#8C8177" strokeWidth="1" />
+        <line x1="205" y1="26" x2="205" y2="34" stroke="#8C8177" strokeWidth="1" />
+        <text x="130" y="24" textAnchor="middle" fontFamily="'JetBrains Mono', monospace" fontSize="11" fill="#7A1620" fontWeight="700">
+          3–4 m
+        </text>
+
+        {/* måttlinje högerkant */}
+        <line x1="222" y1="55" x2="222" y2="205" stroke="#8C8177" strokeWidth="1" />
+        <line x1="218" y1="55" x2="226" y2="55" stroke="#8C8177" strokeWidth="1" />
+        <line x1="218" y1="205" x2="226" y2="205" stroke="#8C8177" strokeWidth="1" />
+        <text
+          x="248"
+          y="134"
+          textAnchor="middle"
+          fontFamily="'JetBrains Mono', monospace"
+          fontSize="11"
+          fill="#7A1620"
+          fontWeight="700"
+          transform="rotate(90 248 134)"
+        >
+          3–4 m
+        </text>
       </svg>
     ),
   },
   "Kvadraten (4v1 & 3v1)": {
-    caption: "Två varianter sida vid sida: kvadrat med 4 mot 1, och kvadrat med 3 mot 1 (en sida utan spelare). Samma princip, färre passningsalternativ.",
+    caption: "Två varianter sida vid sida (ca 3–4 m per sida): kvadrat med 4 mot 1, och kvadrat med 3 mot 1 (en sida utan spelare). Samma princip, färre passningsalternativ.",
     svg: (
       <svg viewBox="0 0 540 260" className="w-full h-auto">
         {/* vänster panel: 4 mot 1 i kvadrat */}
@@ -378,6 +403,12 @@ const DIAGRAMS = {
           <circle cx="55" cy="130" r="9" fill="#221A17" />
           <circle cx="141" cy="44" r="4.5" fill="#7A1620" />
           <circle cx="130" cy="130" r="9" fill="#C8102E" />
+          <line x1="55" y1="30" x2="205" y2="30" stroke="#8C8177" strokeWidth="1" />
+          <line x1="55" y1="26" x2="55" y2="34" stroke="#8C8177" strokeWidth="1" />
+          <line x1="205" y1="26" x2="205" y2="34" stroke="#8C8177" strokeWidth="1" />
+          <text x="130" y="24" textAnchor="middle" fontFamily="'JetBrains Mono', monospace" fontSize="11" fill="#7A1620" fontWeight="700">
+            3–4 m
+          </text>
           <text x="130" y="250" textAnchor="middle" fontFamily="'JetBrains Mono', monospace" fontSize="13" fontWeight="700" fill="#7A1620">
             4 MOT 1
           </text>
@@ -396,6 +427,12 @@ const DIAGRAMS = {
           <circle cx="55" cy="130" r="9" fill="#221A17" />
           <circle cx="141" cy="44" r="4.5" fill="#7A1620" />
           <circle cx="130" cy="130" r="9" fill="#C8102E" />
+          <line x1="55" y1="30" x2="205" y2="30" stroke="#8C8177" strokeWidth="1" />
+          <line x1="55" y1="26" x2="55" y2="34" stroke="#8C8177" strokeWidth="1" />
+          <line x1="205" y1="26" x2="205" y2="34" stroke="#8C8177" strokeWidth="1" />
+          <text x="130" y="24" textAnchor="middle" fontFamily="'JetBrains Mono', monospace" fontSize="11" fill="#7A1620" fontWeight="700">
+            3–4 m
+          </text>
           <text x="130" y="250" textAnchor="middle" fontFamily="'JetBrains Mono', monospace" fontSize="13" fontWeight="700" fill="#7A1620">
             3 MOT 1
           </text>
