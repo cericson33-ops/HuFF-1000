@@ -1811,6 +1811,17 @@ export default function App() {
                 </li>
               ))}
             </ul>
+            <div
+              className="mt-2.5 pt-2.5"
+              style={{
+                borderTop: "1px solid #EFE9DA",
+                fontSize: "0.78rem",
+                color: "#8A8272",
+                lineHeight: 1.5,
+              }}
+            >
+              Standardyta: ca 15×10 m — fungerar för de flesta övningar och lekar. Bredare vid fyra mål. Räkna med flera parallella ytor vid större grupper.
+            </div>
           </div>
 
           <div className="rounded-2xl p-4" style={{ background: "#fff", border: "1px solid #E4DCC9" }}>
