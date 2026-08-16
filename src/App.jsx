@@ -128,11 +128,44 @@ const DIAGRAMS = {
     ),
   },
   Djurgården: {
-    caption: "Spelarna driver in mot central kon och utför olika finter/dribblingar och går antigen till höger eller vänster, där lämnar man över boll till nästa spelare i ledet.",
+    caption: "Spelarna driver in mot central kon (ca 5–6 m från varje yttre kona) och utför olika finter/dribblingar och går antigen till höger eller vänster, där lämnar man över boll till nästa spelare i ledet.",
     svg: (
       <svg viewBox="0 0 280 300" className="w-full h-auto">
         {/* träningsyta */}
         <rect x="15" y="15" width="250" height="270" rx="14" fill="none" stroke="#C9BFA9" strokeWidth="2" strokeDasharray="6 6" />
+
+        {/* måttlinjer, ritade före koner/spelare så de hamnar under */}
+        <line x1="148" y1="60" x2="148" y2="140" stroke="#8C8177" strokeWidth="1" strokeDasharray="3 3" />
+        <line x1="63" y1="205" x2="140" y2="152" stroke="#8C8177" strokeWidth="1" strokeDasharray="3 3" />
+        <line x1="233" y1="205" x2="156" y2="152" stroke="#8C8177" strokeWidth="1" strokeDasharray="3 3" />
+
+        <text x="158" y="102" textAnchor="middle" fontFamily="'JetBrains Mono', monospace" fontSize="10.5" fill="#7A1620" fontWeight="700">
+          5–6 m
+        </text>
+        <text
+          x="82"
+          y="190"
+          textAnchor="middle"
+          fontFamily="'JetBrains Mono', monospace"
+          fontSize="10.5"
+          fill="#7A1620"
+          fontWeight="700"
+          transform="rotate(-32 82 190)"
+        >
+          5–6 m
+        </text>
+        <text
+          x="214"
+          y="190"
+          textAnchor="middle"
+          fontFamily="'JetBrains Mono', monospace"
+          fontSize="10.5"
+          fill="#7A1620"
+          fontWeight="700"
+          transform="rotate(32 214 190)"
+        >
+          5–6 m
+        </text>
 
         {/* central kona, mitt i triangeln */}
         <path d="M140 155 l8 -15 l8 15 z" fill="#C8102E" />
