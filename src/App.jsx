@@ -926,8 +926,8 @@ const THEMES = [
         explanation: "Ett mål räknas bara om det föregåtts av att laget erövrat bollen.",
       },
       {
-        text: "Direkt omstart.",
-        explanation: "Spelet startas om direkt utan avbrott, för att hålla tempot uppe och pressa spelarna.",
+        text: "Alla spelare på egen planhalva.",
+        explanation: "Om inte alla spelare hunnit hem på egen planhalva räknas ett insläppt mål som dubbla mål. Ger det offensiva laget en extra morot att göra snabba mål.",
       },
       {
         text: "Smalare plan.",
@@ -949,8 +949,8 @@ const THEMES = [
         explanation: "Efter bolltapp får laget bonuspoäng om de återerövrar bollen inom 5 sekunder.",
       },
       {
-        text: "Närmaste spelare pressar direkt.",
-        explanation: "Vid bollförlust ska närmaste spelare pressa direkt istället för att organisera om — tvingar fram en omedelbar återerövringsreaktion.",
+        text: "Alla spelare på egen planhalva.",
+        explanation: "Om inte alla spelare hunnit hem på egen planhalva räknas ett insläppt mål som dubbla mål. Ger det offensiva laget en extra morot att göra snabba mål.",
       },
       {
         text: "Riktning byts direkt.",
