@@ -5,10 +5,32 @@ const LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANwAAADcCAMAAAAshD+z
 
 const FONTS = `
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+
+@keyframes huffUnlockOut {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.96); }
+}
+@keyframes huffAppIn {
+  0% { opacity: 0; transform: translateY(18px) scale(0.99); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes huffCheckPop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
 `;
 
-// Giltiga aktiveringskoder. Lägg till/ta bort koder här vid behov.
-const VALID_CODES = ["HUFF-ADMIN-9K2X", "HUFF-TRANARE-BPXE"];
+// Giltiga aktiveringskoder, med lag-etikett för välkomstrutan. Lägg till/ta bort koder här vid behov.
+const VALID_CODES = {
+  "HUFF-ADMIN-9K2X": null,
+  "HUFF-TRANARE-BPXE": null,
+  "HUFF-P6-WAJH": "HuFF P6",
+  "HUFF-P7-ZX6C": "HuFF P7",
+  "HUFF-P8-PAGS": "HuFF P8",
+  "HUFF-P9-AGWT": "HuFF P9",
+  "HUFF-P10-HU3A": "HuFF P10",
+};
 
 // Enkla grafiska diagram som illustrerar övningens uppställning.
 // Nyckeln måste matcha övningens namn exakt.
@@ -1031,29 +1053,52 @@ export default function App() {
   const [accessChecked, setAccessChecked] = useState(false);
   const [codeInput, setCodeInput] = useState("");
   const [codeError, setCodeError] = useState(false);
+  const [unlocking, setUnlocking] = useState(false);
+  const [teamLabel, setTeamLabel] = useState(null);
+  const [showWelcome, setShowWelcome] = useState(false);
 
   const normalizeCode = (c) => c.trim().toUpperCase();
 
   const handleCodeSubmit = () => {
     const cleaned = normalizeCode(codeInput);
-    if (VALID_CODES.includes(cleaned)) {
-      setAccessGranted(true);
+    if (Object.prototype.hasOwnProperty.call(VALID_CODES, cleaned)) {
       setCodeError(false);
+      setUnlocking(true);
+      setTeamLabel(VALID_CODES[cleaned]);
       try {
         localStorage.setItem("huff1000:access-code", cleaned);
       } catch (e) {
         // ignorera lagringsfel
       }
+      // Låt "upplåst"-animationen synas innan vi faktiskt växlar in i appen.
+      setTimeout(() => {
+        setAccessGranted(true);
+        checkFirstTimeWelcome(cleaned);
+      }, 620);
     } else {
       setCodeError(true);
+    }
+  };
+
+  const checkFirstTimeWelcome = (code) => {
+    try {
+      const seen = localStorage.getItem("huff1000:welcome-seen");
+      if (!seen) {
+        setShowWelcome(true);
+        localStorage.setItem("huff1000:welcome-seen", "1");
+      }
+    } catch (e) {
+      // lagring otillgänglig — visa ändå välkomstrutan för säkerhets skull
+      setShowWelcome(true);
     }
   };
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem("huff1000:access-code");
-      if (saved && VALID_CODES.includes(normalizeCode(saved))) {
+      if (saved && Object.prototype.hasOwnProperty.call(VALID_CODES, normalizeCode(saved))) {
         setAccessGranted(true);
+        setTeamLabel(VALID_CODES[normalizeCode(saved)]);
       }
     } catch (e) {
       // ingen sparad kod ännu
@@ -1116,16 +1161,36 @@ export default function App() {
 
   if (!accessGranted) {
     return (
-      <div className="min-h-screen w-full flex flex-col" style={{ background: "#F5F1E8" }}>
+      <div
+        className="min-h-screen w-full flex flex-col"
+        style={{
+          background: "#F5F1E8",
+          animation: unlocking ? "huffUnlockOut 500ms ease forwards" : "none",
+        }}
+      >
         <style>{FONTS}</style>
         <div
           className="px-6 text-center"
           style={{
-            background: "#7A1620",
+            background: "linear-gradient(135deg, #8C1B27 0%, #6B1219 100%)",
             paddingTop: "max(3.5rem, calc(env(safe-area-inset-top) + 2.5rem))",
             paddingBottom: "2.5rem",
+            position: "relative",
+            overflow: "hidden",
           }}
         >
+          <div
+            style={{
+              position: "absolute",
+              top: -30,
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: 220,
+              height: 220,
+              background: "radial-gradient(circle, rgba(245,160,90,0.22), transparent 70%)",
+              pointerEvents: "none",
+            }}
+          />
           <div
             className="mx-auto rounded-full flex items-center justify-center"
             style={{
@@ -1133,18 +1198,30 @@ export default function App() {
               height: 86,
               background: "#F5F1E8",
               padding: 7,
-              boxShadow: "0 8px 22px rgba(0,0,0,0.32)",
+              boxShadow: "0 8px 22px rgba(0,0,0,0.32), 0 0 0 3px rgba(245,160,90,0.25)",
+              position: "relative",
+              zIndex: 2,
             }}
           >
             <img src={LOGO} alt="Hudiksvalls FF" style={{ width: 72, height: 72, display: "block" }} />
           </div>
           <h1
             className="mt-4"
-            style={{ fontFamily: "'Fraunces', serif", fontWeight: 900, fontSize: "1.8rem", color: "#F5F1E8" }}
+            style={{
+              fontFamily: "'Fraunces', serif",
+              fontWeight: 900,
+              fontSize: "1.8rem",
+              color: "#F5F1E8",
+              position: "relative",
+              zIndex: 2,
+            }}
           >
             HuFF-1000
           </h1>
-          <p className="mt-2 text-sm" style={{ color: "#E8B4A8", lineHeight: 1.5 }}>
+          <p
+            className="mt-2 text-sm"
+            style={{ color: "#E8B4A8", lineHeight: 1.5, position: "relative", zIndex: 2 }}
+          >
             Träningskonceptet för Hudiksvalls FF:s ungdomslag i åldrarna 6–10 år — ange din
             aktiveringskod för att fortsätta
           </p>
@@ -1202,17 +1279,33 @@ export default function App() {
           )}
           <button
             onClick={handleCodeSubmit}
-            className="w-full"
+            className="w-full flex items-center justify-center gap-2"
+            disabled={unlocking}
             style={{
               padding: "16px 0",
               borderRadius: 12,
-              background: "#7A1620",
+              background: unlocking ? "#3D8C5A" : "#7A1620",
               color: "#F5F1E8",
               fontWeight: 700,
               fontSize: "0.96rem",
+              transition: "background 0.3s ease",
             }}
           >
-            Lås upp
+            {unlocking ? (
+              <>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    animation: "huffCheckPop 400ms ease forwards",
+                  }}
+                >
+                  ✓
+                </span>
+                Upplåst!
+              </>
+            ) : (
+              "Lås upp"
+            )}
           </button>
 
           <p
@@ -1229,24 +1322,111 @@ export default function App() {
   return (
     <div className="min-h-screen w-full" style={{ background: "#F5F1E8" }}>
       <style>{FONTS}</style>
+
+      {showWelcome && (
+        <div
+          className="fixed inset-0 flex items-center justify-center px-6"
+          style={{ background: "rgba(34,26,23,0.55)", zIndex: 50 }}
+        >
+          <div
+            className="text-center"
+            style={{
+              background: "#F5F1E8",
+              borderRadius: 20,
+              padding: "28px 24px 24px",
+              maxWidth: 300,
+              boxShadow: "0 20px 50px rgba(0,0,0,0.35)",
+              animation: "huffAppIn 400ms ease forwards",
+            }}
+          >
+            <div
+              className="mx-auto flex items-center justify-center"
+              style={{
+                width: 72,
+                height: 72,
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #8C1B27, #6B1219)",
+                marginBottom: 16,
+                boxShadow: "0 0 0 6px rgba(245,160,90,0.15)",
+                padding: 8,
+              }}
+            >
+              <img src={LOGO} alt="Hudiksvalls FF" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            </div>
+            <h2
+              style={{
+                fontFamily: "'Fraunces', serif",
+                fontWeight: 900,
+                fontSize: "1.3rem",
+                color: "#221A17",
+                lineHeight: 1.25,
+                marginBottom: 8,
+              }}
+            >
+              {teamLabel ? `Välkommen, tränare i ${teamLabel}!` : "Välkommen, tränare!"}
+            </h2>
+            <p style={{ fontSize: "0.87rem", color: "#6B6357", lineHeight: 1.5, marginBottom: 20 }}>
+              Här hittar du dagens träning, redo att köra direkt — bara att välja ålder och tema.
+            </p>
+            <button
+              onClick={() => setShowWelcome(false)}
+              className="w-full"
+              style={{
+                padding: "13px 0",
+                borderRadius: 12,
+                background: "#7A1620",
+                color: "#F5F1E8",
+                fontWeight: 700,
+                fontSize: "0.92rem",
+              }}
+            >
+              Kom igång
+            </button>
+          </div>
+        </div>
+      )}
+
       <div
         className="mx-auto w-full max-w-md pb-16"
-        style={{ fontFamily: "'Inter', sans-serif", color: "#221A17" }}
+        style={{
+          fontFamily: "'Inter', sans-serif",
+          color: "#221A17",
+          animation: "huffAppIn 550ms ease forwards",
+        }}
       >
         {/* Header */}
         <header
           className="px-5 pb-6"
           style={{
-            background: "#7A1620",
+            background: "linear-gradient(135deg, #8C1B27 0%, #6B1219 100%)",
             paddingTop: "max(2rem, calc(env(safe-area-inset-top) + 0.75rem))",
+            position: "relative",
+            overflow: "hidden",
           }}
         >
-          <div className="flex items-center justify-between">
+          <div
+            style={{
+              position: "absolute",
+              top: -30,
+              left: -20,
+              width: 180,
+              height: 180,
+              background: "radial-gradient(circle, rgba(245,160,90,0.25), transparent 70%)",
+              pointerEvents: "none",
+            }}
+          />
+          <div className="flex items-center justify-between" style={{ position: "relative", zIndex: 2 }}>
             <div className="flex items-center gap-3">
               <img
                 src={LOGO}
                 alt="Hudiksvalls FF"
-                style={{ width: 44, height: 44, flexShrink: 0 }}
+                style={{
+                  width: 44,
+                  height: 44,
+                  flexShrink: 0,
+                  boxShadow: "0 4px 14px rgba(0,0,0,0.3), 0 0 0 3px rgba(245,160,90,0.25)",
+                  borderRadius: "50%",
+                }}
               />
               <h1
                 style={{
@@ -1263,24 +1443,21 @@ export default function App() {
             <span
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
-                color: "#E8B4A8",
+                color: "#F5A05A",
                 fontSize: "0.7rem",
               }}
             >
               6–10 år
             </span>
           </div>
-          <p style={{ color: "#E8B4A8", fontSize: "0.85rem", marginTop: "0.25rem" }}>
+          <p style={{ color: "#E8B4A8", fontSize: "0.85rem", marginTop: "0.25rem", position: "relative", zIndex: 2 }}>
             Dagens träning — välj åldersgrupp och veckans tema
           </p>
         </header>
 
         {/* Age selector */}
-        <div className="px-5 -mt-4">
-          <div
-            className="flex rounded-xl overflow-hidden shadow-md"
-            style={{ background: "#fff", border: "1px solid #E4DCC9" }}
-          >
+        <div className="px-5 mt-5">
+          <div className="flex gap-2">
             {AGE_GROUPS.map((a) => (
               <button
                 key={a.id}
@@ -1291,10 +1468,13 @@ export default function App() {
                     setThemeId(list[0].id);
                   }
                 }}
-                className="flex-1 py-3 text-sm font-semibold transition-colors"
+                className="flex-1 py-3 text-sm font-semibold rounded-xl transition-all"
                 style={{
-                  background: a.id === ageId ? "#7A1620" : "transparent",
+                  background: a.id === ageId ? "#7A1620" : "#fff",
                   color: a.id === ageId ? "#F5F1E8" : "#7A1620",
+                  border: a.id === ageId ? "1.5px solid #7A1620" : "1.5px solid #E4DCC9",
+                  boxShadow: a.id === ageId ? "0 6px 16px rgba(122,22,32,0.35)" : "none",
+                  transform: a.id === ageId ? "translateY(-1px)" : "none",
                 }}
               >
                 {a.label}
@@ -1325,6 +1505,7 @@ export default function App() {
                   background: t.id === themeId ? "#C8102E" : "#fff",
                   color: t.id === themeId ? "#fff" : "#221A17",
                   border: t.id === themeId ? "1px solid #C8102E" : "1px solid #E4DCC9",
+                  boxShadow: t.id === themeId ? "0 4px 12px rgba(200,16,46,0.3)" : "none",
                 }}
               >
                 {t.name}
@@ -1333,16 +1514,60 @@ export default function App() {
           </div>
         </div>
 
+        {/* Journey-indikator: visar träningens fyra block som en resa */}
+        <div className="px-5 mt-5 flex items-center gap-1">
+          {age.blocks.map((_, i) => (
+            <React.Fragment key={i}>
+              <div
+                style={{
+                  width: 9,
+                  height: 9,
+                  borderRadius: "50%",
+                  background: "#7A1620",
+                  flexShrink: 0,
+                }}
+              />
+              {i < age.blocks.length - 1 && (
+                <div
+                  style={{
+                    flex: 1,
+                    height: 2,
+                    background: "linear-gradient(90deg, #7A1620, #E4DCC9)",
+                  }}
+                />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+
         {/* Session summary strip */}
         <div className="px-5 mt-6">
           <div
             className="rounded-2xl px-5 py-4"
-            style={{ background: "#221A17" }}
+            style={{ background: "#221A17", position: "relative", overflow: "hidden" }}
           >
-            <div style={{ color: "#B8ADA1", fontSize: "0.7rem", fontFamily: "'JetBrains Mono', monospace" }}>
+            <div
+              style={{
+                position: "absolute",
+                top: -20,
+                right: -20,
+                width: 90,
+                height: 90,
+                background: "radial-gradient(circle, rgba(245,160,90,0.15), transparent 70%)",
+                pointerEvents: "none",
+              }}
+            />
+            <div
+              style={{
+                color: "#B8ADA1",
+                fontSize: "0.7rem",
+                fontFamily: "'JetBrains Mono', monospace",
+                position: "relative",
+              }}
+            >
               TOTAL TID
             </div>
-            <div style={{ color: "#F5F1E8", fontSize: "1.15rem", fontWeight: 700 }}>
+            <div style={{ color: "#F5A05A", fontSize: "1.2rem", fontWeight: 700, position: "relative" }}>
               {age.totalTime}
             </div>
           </div>
@@ -1360,51 +1585,81 @@ export default function App() {
                 style={{
                   background: "#fff",
                   border: isThemed ? "1.5px solid #C8102E" : "1px solid #E4DCC9",
+                  position: "relative",
+                  paddingLeft: 4,
+                  boxShadow: "0 3px 14px rgba(0,0,0,0.06)",
                 }}
               >
+                <div
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 12,
+                    bottom: 12,
+                    width: 4,
+                    borderRadius: 4,
+                    background: "linear-gradient(180deg, #C8102E, #7A1620)",
+                  }}
+                />
                 <div className="p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-start gap-3">
-                      <div
-                        className="flex-shrink-0 flex items-center justify-center rounded-full font-bold"
+                  <div className="flex items-center gap-3.5">
+                    <div
+                      className="flex-shrink-0"
+                      style={{
+                        fontFamily: "'Fraunces', serif",
+                        fontWeight: 900,
+                        fontSize: "2rem",
+                        color: "#EFE0D8",
+                        lineHeight: 1,
+                        textShadow: "1px 1px 0 #fff",
+                      }}
+                    >
+                      {i + 1}
+                    </div>
+                    <div className="flex-1">
+                      <h3 style={{ fontFamily: "'Fraunces', serif", fontWeight: 700, fontSize: "1.05rem" }}>
+                        {b.title}
+                      </h3>
+                      <span
                         style={{
-                          width: 28,
-                          height: 28,
-                          background: "#7A1620",
-                          color: "#F5F1E8",
-                          fontSize: "0.85rem",
                           fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: "0.7rem",
+                          color: "#C8102E",
+                          fontWeight: 700,
+                          display: "block",
+                          marginTop: 2,
                         }}
                       >
-                        {i + 1}
-                      </div>
-                      <div>
-                        <h3 style={{ fontFamily: "'Fraunces', serif", fontWeight: 700, fontSize: "1.05rem" }}>
-                          {b.title}
-                        </h3>
-                        {isThemed && (
-                          <span
-                            style={{
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: "0.65rem",
-                              color: "#C8102E",
-                              letterSpacing: "0.05em",
-                            }}
-                          >
-                            TEMA: {theme?.name?.toUpperCase() || ""}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#7A1620" }}>{b.time}</div>
+                        {b.time}
+                      </span>
+                      {isThemed && (
+                        <span
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: "0.65rem",
+                            color: "#C8102E",
+                            letterSpacing: "0.05em",
+                          }}
+                        >
+                          TEMA: {theme?.name?.toUpperCase() || ""}
+                        </span>
+                      )}
                     </div>
                   </div>
 
                   <ul className="mt-3 space-y-1.5 pl-1">
                     {b.points.map((p, j) => (
                       <li key={j} className="flex gap-2 text-sm" style={{ color: "#3A322D" }}>
-                        <ChevronRight size={14} className="flex-shrink-0 mt-0.5" style={{ color: "#C8102E" }} />
+                        <span
+                          className="flex-shrink-0"
+                          style={{
+                            width: 6,
+                            height: 6,
+                            borderRadius: "50%",
+                            background: "#C8102E",
+                            marginTop: 6,
+                          }}
+                        />
                         <span>{p}</span>
                       </li>
                     ))}
@@ -1918,7 +2173,7 @@ export default function App() {
 
         <div
           className="mx-auto mt-4"
-          style={{ width: 40, height: 1, background: "#D8CFBB" }}
+          style={{ width: 32, height: 2, borderRadius: 2, background: "linear-gradient(90deg, #C8102E, #F5A05A)" }}
         />
 
         <p
