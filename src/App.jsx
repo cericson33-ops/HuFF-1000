@@ -1104,7 +1104,7 @@ const YOUNG_THEMES = [
   {
     id: "anfallsspel",
     name: "Anfallsspel",
-    points: ["Försök spela bollen framåt", "Vem i laget är fri?"],
+    points: ["Försök spela bollen framåt"],
   },
   {
     id: "forsvarsspel",
