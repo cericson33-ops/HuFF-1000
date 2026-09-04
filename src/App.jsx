@@ -91,7 +91,7 @@ const DIAGRAMS = {
   Stoppljus: {
     blocks: ["warmup"],
     themes: [],
-    caption: "Alla driver boll fritt i ytan. Frys på RÖTT, kör vidare på GRÖNT.",
+    caption: "Alla driver boll fritt i ytan. Frys på RÖTT, kör vidare på GRÖNT. På GULT gäller ett lugnare tempo — t.ex. gå med bollen eller dribbla baklänges.",
     svg: (
       <svg viewBox="0 0 300 190" className="w-full h-auto">
         <rect x="10" y="10" width="280" height="170" rx="14" fill="none" stroke="#C9BFA9" strokeWidth="2" strokeDasharray="6 6" />
@@ -103,9 +103,10 @@ const DIAGRAMS = {
           </g>
         ))}
         {/* signal-ikon */}
-        <rect x="255" y="20" width="20" height="42" rx="5" fill="#fff" stroke="#221A17" strokeWidth="2" />
-        <circle cx="265" cy="30" r="5" fill="#C8102E" />
-        <circle cx="265" cy="52" r="5" fill="#4C9A5A" />
+        <rect x="253" y="16" width="24" height="60" rx="6" fill="#fff" stroke="#221A17" strokeWidth="2" />
+        <circle cx="265" cy="27" r="5" fill="#C8102E" />
+        <circle cx="265" cy="46" r="5" fill="#E8B93C" />
+        <circle cx="265" cy="65" r="5" fill="#4C9A5A" />
       </svg>
     ),
   },
